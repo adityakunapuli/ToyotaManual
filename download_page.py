@@ -43,6 +43,10 @@ def parse_title(title, suffix='.html'):
     title = title.replace(': ', '/')
     title = re.sub(r';.*', '', title)
     title = title.replace('Ecu', 'ECU')
+    # title = title \
+    #     .replace('2Ur-Gse', '2UR-GSE') \
+    #     .replace('2Ur-Fks', '2UR-FKS') \
+    #     .replace('8Ar-Fts', '8AR-FTS')
     if suffix:
         title += suffix
     return title
@@ -67,19 +71,23 @@ def download_pages(category):
     return failed_pages
 
 
-def download_page(category):
+def download_page(category=None):
     """
     Downloads CSS, images, etc
     """
-    driver.switch_to.default_content()
-    driver.switch_to.frame('manual_frame')
+    try:
+        driver.switch_to.default_content()
+        driver.switch_to.frame('manual_frame')
+    except:
+        ...
     page_source = driver.page_source
     soup = BeautifulSoup(page_source)
     table = soup.find('table', attrs={'class': 'side'}).text.replace('\xa0', '')
     doc_id = re.findall('Doc ID: (\w+)', table)[0]
     title = re.findall('Title: (.*)', table)[0]
     file_name = parse_title(title)
-    file_name = str(Path(category.replace('/', '-')) / file_name)
+    if isinstance(category, str):
+        file_name = str(Path(category.replace('/', '-')) / file_name)
     file_name = file_name.replace('.', f' ({doc_id}).')
     parents = len(Path(file_name).parents) - 1
     page_source = page_source.replace('/t3Portal', '../' * parents + 't3Portal')

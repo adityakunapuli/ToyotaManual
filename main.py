@@ -79,16 +79,16 @@ if __name__ == '__main__':
     else:
         failed = {}
 
-    nav_tree_path = BASE_PATH / 'navigation_tree.json'
-    if nav_tree_path.exists():
-        with open(nav_tree_path, 'w') as f:
-            tree = json.load(f)
-    else:
-        tree = {}
+    # nav_tree_path = BASE_PATH / 'navigation_tree.json'
+    # if nav_tree_path.exists():
+    #     with open(nav_tree_path, 'w') as f:
+    #         tree = json.load(f)
+    # else:
+    tree = {}
 
     for i, (category, element_ids) in enumerate(parent_folders.items(), 1):
-        if category not in ['Suspension', 'Vehicle Exterior', 'Vehicle Interior']:
-            continue
+        # if category not in ['Suspension', 'Vehicle Exterior', 'Vehicle Interior']:
+        #     continue
         print(f'Starting...{category} ({i}/{len(parent_folders)})')
         # expand the parent folder
         clickable_element_id = element_ids['a']
@@ -96,8 +96,6 @@ if __name__ == '__main__':
         sub_tree = generate_nav_graph()
         tree.update(sub_tree)
         failed[category] = download_pages(category=category)
-        # print(f'\tCompleted')
-        # countdown_timer(10)
         reset_nav_tree()
         countdown_timer(3, silent=True)
 

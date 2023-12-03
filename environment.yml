@@ -1,0 +1,22 @@
+name: ToyotaRM
+channels:
+  - defaults
+dependencies:
+  - python=3.8.15
+  - ca-certificates=2022.10.11
+  - certifi=2022.9.24
+  - openssl=1.1.1s
+  - packaging=21.3
+  - pip=22.2.2
+  - setuptools=65.5.0
+  - wheel=0.37.1
+  - pip:
+      - beautifulsoup4==4.12.2
+      - lxml==4.9.3
+      - ray==2.8.1
+      - requests==2.31.0
+      - selenium==4.11.2
+      - selenium-wire==5.1.0
+      - tqdm==4.65.0
+      - yaml~=0.2.5
+      - pyyaml~=6.0.1

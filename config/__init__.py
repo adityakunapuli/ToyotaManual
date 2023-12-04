@@ -10,20 +10,11 @@ ICON_FOLDEROPEN = 'icons/folderopen.gif'
 ROOT_FOLDER = 'LEXUS 2014-2024 IS200T IS250 IS300 IS350 IS500 Repair Manual (RM30G0U)'
 BASE_PATH = Path('saved')
 BASE_URL = 'https://techinfo.toyota.com'
+END_PATH = Path('saved/t3Portal/document/rm/RM30G0U/xhtml')
 
 TECHNICIAN_MANUAL_URL = 'https://techinfo.toyota.com/t3Portal/resources/jsp/siviewer/index.jsp?dir=rm/RM30G0U'
-CATEGORIES = [
-    'General',
-    'Audio - Video/ Visual / Telematics',
-    'Brake',
-    'Drivetrain',
-    'Engine / Hybrid System',
-    'Power Source / Network',
-    'Steering',
-    'Suspension',
-    'Vehicle Exterior',
-    'Vehicle Interior'
-]
+CATEGORIES = ['General', 'Audio - Video- Visual - Telematics', 'Brake', 'Drivetrain', 'Engine - Hybrid System', 'Power Source - Network', 'Steering', 'Suspension',
+              'Vehicle Exterior', 'Vehicle Interior']
 
 AUTHENTICATION_URL = 'https://ep.fram.idm.toyota.com/openam/json/realms/root/realms/dealerdaily/authenticate?authIndexType=service&authIndexValue=Techinfo'
 # username/password
@@ -45,3 +36,28 @@ AUTHENTICATION_HEADERS = {
     'sec-fetch-site'    : 'same-site',
     'te'                : 'trailers'
 }
+
+ENGINE_CODES = [
+    '2GR-FSE',
+    'CRUISE',
+    '8AR-FTS',
+    '2GR-FKS',
+    '2UR-GSE',
+    '4GR-FSE',
+]
+
+UPPER_CASE = ENGINE_CODES + [
+    'SAE',
+    'IS200T',
+    'AA81E',
+    'AXLE',
+    'UF1AE',
+    'AA80E',
+    'A960E',
+    'DRIVE',
+    'A760H',
+    'TC',
+    'CG',
+    'SFI',
+    'ECM',
+]

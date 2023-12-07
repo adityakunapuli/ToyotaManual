@@ -1,11 +1,10 @@
 import json
 import re
-from collections import defaultdict
-from copy import deepcopy
 
 from bs4 import BeautifulSoup
 
 from config import *
+from utils import dict_to_nested_dict_with_links
 
 
 def long_substr(data):
@@ -16,96 +15,69 @@ def long_substr(data):
     return max(s, key=len)
 
 
-def format_title(last, page_path):
-    length = len(last)
-    break_at = length - last[::-1].find(';')
-    title = last[:break_at - 1]
+def format_title(text):
+    if ';' not in text:
+        return title_case(text)
+    length = len(text)
+    break_at = length - text[::-1].find(';')
+    title = text[:break_at - 1]
     title = title.replace(';', ':')
 
-    desc = re.sub('\xa0+', ' ', last[break_at:].strip())
+    desc = re.sub('\xa0+', ' ', text[break_at:].strip())
     models, years = re.findall(r'.*? MY (.*) \[(.*)\]', desc)[0]
     models = models.split(' ')
     common = long_substr(models)
     models = common + '/'.join([x.replace(common, '') for x in models])
-    page_path = page_path.strip('/')
-
     title = title_case(title)
     page_title = f'{title} [{years}] [{models}]'
-    # UPPER_CASE
-    html = f'<a href="{page_path}" target="main_content">{page_title}</a>'
-    return html
+    return page_title
 
 
 def title_case(x):
     x_split = x.split(' ')
-    # x = [w.title() for w in x_split if w not in UPPER_CASE]
     s = []
     for w in x_split:
-        s.append(w if w in UPPER_CASE else w.title())
+        s.append(w.upper() if w.upper() in UPPER_CASE else w.title())
     return ' '.join(s)
 
 
-# def parse_dict_to_html(d):
-#     s = '<ul>'
-#     for k, v in d.items():
-#         s += f'<li>{k}\n'
-#         if isinstance(v, dict):
-#             s += parse_dict_to_html(v)
-
-
-def printItems(dictObj, parent, indent):
-    if len(dictObj):
-        print('{}<ul>'.format('  ' * indent))
-        for k, v in dictObj.iteritems():
-            print('{}<li><input type="checkbox" id="{}-{}">{}</li>'.format(
-                '  ' * (indent + 1), k, parent, k))
-            printItems(v, k, indent + 1)
-        print('{}</ul>'.format('  ' * indent))
-
-
-def printitems(dictObj, indent=0):
-    p = []
-    p.append('<ul>\n')
-    for k, v in dictObj.items():
-        if isinstance(v, dict):
-            p.append('<li>' + k + ':')
-            p.append(printitems(v))
-            p.append('</li>')
-        else:
-            p.append('<li>' + k + ':' + v + '</li>')
-    p.append('</ul>\n')
-    return '\n'.join(p)
-
-
-def get_html(o):
+def get_html2(o, nested=False):
     s = ""
     if isinstance(o, dict):
-        s += '<ul id="navigation_tree">\n'
+        s += f'<ul class="{"nested" if nested else "treeview-animated-list"}">\n'
         for k, v in o.items():
-            s += f'<li>{k}' + get_html(v) + "</li>\n"
+            s += f'''<li class="treeview-animated-items">
+                            <a class="closed"> <i class="fas fa-angle-right"></i>
+                                <span><i class="far fa-folder-open ic-w mx-1"></i>
+                                    {k}</span></a>''' + get_html2(v, True) + '''
+                                
+                            </li>'''
         s += '</ul>'
     elif isinstance(o, list):
-        s += "<ul>\n"
+        s += '<ul class="nested">\n'
         if not o:
             return str(o)
         else:
-            out = []
             for v in o:
-                ss = ""
-                for kk, vv in v.items():
-                    ss += f"<li><b>{kk}</b>:" + get_html(vv) + " </li>\n"
-                out.append(ss)
-            s += "<br>\n".join(out)
+                s += f'''<li>
+                     <div class="treeview-animated-element">
+                        <i class="fas fa-file ic-w mr-1"></i>
+                            {v}
+                        </div>
+                    </li>'''
             s += "</ul>"
     else:
-        return f'<br>{str(o)}'
-    return s
-
-
-def nested_set(dic, keys, value):
-    for key in keys[:-1]:
-        dic = dic.setdefault(key, {})
-    dic[keys[-1]] = value
+        return f'''
+        <ul class="nested">
+            <li>
+                <div class="treeview-animated-element">
+                <i class="fas fa-file ic-w mr-1"></i>
+                    {str(o)}
+                </div>
+            </li>
+        </ul>
+        '''
+    return re.sub('\s+', ' ', s)
 
 
 if __name__ == '__main__':
@@ -114,57 +86,23 @@ if __name__ == '__main__':
 
     new_toc = {}
     for k, v in toc.items():
-        # if 'RM100000000N4P5' in k:
-        #     print(k)
-        #     break
-
         new_v = []
         for w in v:
             engine_code = [x for x in w.split(' ') if x in ENGINE_CODES]
+            # w = format_title(w)
             if engine_code:
                 engine_code = engine_code[0]
-                new_v.append(engine_code)
                 sub_dir = w.replace('(', '').replace(')', '').replace(engine_code, '').strip()
-                new_v.append(sub_dir)
+                new_v.append(format_title(sub_dir))
+                new_v.append(engine_code)
             else:
-                new_v.append(w)
-
+                new_v.append(format_title(w))
         new_toc[k] = new_v
 
-    d = defaultdict(dict)
+    d = dict_to_nested_dict_with_links(new_toc)
 
-    for page_path, v in deepcopy(new_toc).items():
-        v = [x.replace('\xa0', '') for x in v]
-        last = v.pop(-1)
-        last = format_title(last, page_path)
-        keys = [title_case(key) for key in v]
-        nested_set(d, keys, last)
-
-    # print(json.dumps(dict(d), indent=4))
-
-    # d = d['General']['Introduction']
-    html_string = get_html(d)
+    html_string = get_html2(d)
     soup = BeautifulSoup(html_string, features='html.parser')
-    #
-    # tag_a = soup.new_tag('a', attrs={'class': 'closed'})
-    # tag_i = soup.new_tag('i', attrs={'class': 'fas fa-angle-right'})
-    # tag_span = soup.new_tag('span')
-    # tag_i2 = soup.new_tag('i', attrs={'class': 'far fa-envelope-open ic-w mx-1'})
-    # tag_div = soup.new_tag('div', attrs={'class': 'treeview-animated-element'})
-    #
-    # # li.insert(0)
-    #
-    # for i, ul in enumerate(soup.find_all('ul', recursive=True)):
-    #     if i == 0:
-    #         ul.attrs = {'class': 'mb-1 pl-3 pb-2'}
-    #     else:
-    #         ul.attrs = {'class': 'nested'}
-    # for li in soup.find_all('li', recursive=True):
-    #     if li.text == 'General':
-    #         print(li)
-    #     li.attrs = {'class': 'treeview-animated-items'}
-
-    # soup.find('ul').attrs = {'id': 'navigation_tree', 'class': 'jslists'}
-    template = open('saved/index.html', 'r').read().replace('% VAR %', soup.prettify())
-    with open('saved/index2.html', 'w') as f:
+    template = open('repair_manual/template.html', 'r').read().replace('% VAR %', soup.prettify())
+    with open('repair_manual/output.html', 'w') as f:
         f.write(template)

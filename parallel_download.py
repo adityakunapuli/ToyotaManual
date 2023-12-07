@@ -9,7 +9,7 @@ import requests
 from tqdm import tqdm
 
 from config import *
-from utils import get_authenticated_session, get_toc_xml
+from utils import get_authenticated_session, get_toc_json
 
 
 def strip_query_from_url(asset_url):
@@ -23,7 +23,7 @@ def strip_query_from_url(asset_url):
 def make_local_path(url: str) -> PosixPath:
     url = strip_query_from_url(url)
     local_path = BASE_PATH / url.replace('https://techinfo.toyota.com/', '')
-    local_path.parent.mkdir(parents=True, exist_ok=True)
+    local_path.tag.mkdir(parents=True, exist_ok=True)
     return local_path
 
 
@@ -69,7 +69,7 @@ def get_page(page: str):
 
 if __name__ == '__main__':
     session = get_authenticated_session()
-    toc = get_toc_xml()
+    toc = get_toc_json()
     pages = list(toc.keys())
 
 

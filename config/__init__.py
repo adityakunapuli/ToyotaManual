@@ -12,13 +12,16 @@ BASE_PATH = Path('saved')
 BASE_URL = 'https://techinfo.toyota.com'
 END_PATH = Path('saved/t3Portal/document/rm/RM30G0U/xhtml')
 
+VEHICLE_CODES = {
+    'IS250': 'RM30G0U',
+    'RAV4' : 'RM01M0U'
+}
+
 TECHNICIAN_MANUAL_URL = 'https://techinfo.toyota.com/t3Portal/resources/jsp/siviewer/index.jsp?dir=rm/RM30G0U'
 CATEGORIES = ['General', 'Audio - Video- Visual - Telematics', 'Brake', 'Drivetrain', 'Engine - Hybrid System', 'Power Source - Network', 'Steering', 'Suspension',
               'Vehicle Exterior', 'Vehicle Interior']
 
 AUTHENTICATION_URL = 'https://ep.fram.idm.toyota.com/openam/json/realms/root/realms/dealerdaily/authenticate?authIndexType=service&authIndexValue=Techinfo'
-# username/password
-
 
 AUTHENTICATION_HEADERS = {
     'user-agent'        : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:120.0) Gecko/20100101 Firefox/120.0',
@@ -47,7 +50,10 @@ ENGINE_CODES = [
 ]
 
 UPPER_CASE = ENGINE_CODES + [
+    'ECU',
     'SAE',
+    'SST',
+    'SSM'
     'IS200T',
     'AA81E',
     'AXLE',

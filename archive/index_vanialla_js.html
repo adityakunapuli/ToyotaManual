@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Toyota TIS Repair Manual</title>
+        <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+        <!--        <link href='jslists-master/jsLists.css' rel='stylesheet' type='text/css'>-->
+        <link rel="stylesheet" href="font-awesome.css"/>
+        
+        <style>
+            body {
+                color: #333;
+            }
+            
+            ul {
+                list-style: none;
+            }
+            
+            .iframe {
+                height: 100%;
+                width: 70%;
+                float: left;
+                overflow-y: scroll;
+                /*font-size: 1.15rem;*/
+                border : None;
+            }
+            
+            .bullet-list-round {
+                padding: 0;
+                margin: 0 0 24px 12px;
+                line-height: 1.28571em;
+                margin-left: 14px;
+            }
+            
+            .bullet-list-round li {
+                margin-top: 6px;
+                margin-bottom: 6px;
+                background-image: url(page.png);
+                background-size: 13px;
+                background-repeat: no-repeat;
+                padding-left: 20px;
+            }
+            
+            li.folder {
+                background-image: url(folder.png);
+            }
+            
+            a {
+                color: #000000;
+                cursor: pointer;
+                text-decoration: none;
+            }
+            
+            a:hover {
+                text-decoration: underline;
+            }
+        </style>
+    </head>
+    <body style="height: 98vh;">
+        <div style='height: 100%; width: 30%; float: left; overflow-y: scroll;'>
+            % VAR %
+        </div>
+        <iframe name="main_content" class="iframe"></iframe>
+        
+        <script src="jquery-3.7.1.slim.min.js"></script>
+        <script>
+            // Execute this after the site is loaded.
+            $(function () {
+                // Find list items representing folders and
+                // style them accordingly.  Also, turn them
+                // into links that can expand/collapse the
+                // tree leaf.
+                $('li > ul').each(function (i) {
+                    // Find this list's parent list item.
+                    var parentLi = $(this).parent('li');
+                    
+                    // Style the list item as folder.
+                    parentLi.addClass('folder');
+                    
+                    // Temporarily remove the list from the
+                    // parent list item, wrap the remaining
+                    // text in an anchor, then reattach it.
+                    var subUl = $(this).remove();
+                    parentLi.wrapInner('<a/>').find('a').click(function () {
+                        // Make the anchor toggle the leaf display.
+                        subUl.toggle();
+                    });
+                    parentLi.append(subUl);
+                });
+                
+                // Hide all lists except the outermost.
+                $('ul ul').hide();
+            });
+        </script>
+    </body>
+</html>

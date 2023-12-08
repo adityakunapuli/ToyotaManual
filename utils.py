@@ -1,5 +1,4 @@
 import json
-from pprint import pp
 
 import requests
 from lxml import etree as ET
@@ -56,7 +55,7 @@ def dict_to_nested_dict_with_links(input_dict):
             current_dict = current_dict.setdefault(item, {})
 
         key = inner_list[-2]
-        value = f'<a href="{url}">{inner_list[-1]}</a>'
+        value = f'<a href="{url}" target="page_frame">{inner_list[-1]}</a>'
 
         if key not in current_dict:
             current_dict[key] = value
@@ -66,5 +65,3 @@ def dict_to_nested_dict_with_links(input_dict):
             current_dict[key].append(value)
 
     return nested_dict
-
-#

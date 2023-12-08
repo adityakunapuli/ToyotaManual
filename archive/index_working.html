@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Toyota TIS Repair Manual</title>
+        <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+        <link href='jslists-master/jsLists.css' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="font-awesome.css"/>
+        
+        <style>
+            
+            .iframe {
+                height: 100%;
+                width: 100%;
+                float: left;
+                overflow-y: scroll;
+                /*font-size: 1.15rem;*/
+                border: None;
+            }
+            
+            html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            
+            body {
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 16px;
+            }
+            
+            header {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 90px;
+                background-color: rgb(156, 158, 160);
+                padding-left: 18px;
+            }
+            
+            header > div {
+                position: relative;
+                display: inline-block;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 3.4rem;
+                font-weight: 900;
+            }
+            
+            main {
+                position: absolute;
+                top: 90px;
+                height: calc(100vh - 90px);
+            }
+            
+            main > div:nth-child(1) {
+                padding: 16px;
+            }
+            
+            main > div:nth-child(2) {
+                padding: 18px;
+            }
+        </style>
+    </head>
+    <body>
+        <div style='height: 100%; width: 30%; float: left; overflow-y: scroll;'>
+            % VAR %
+        </div>
+        <iframe name="main_content"
+                style='height: 100%; width: 70%; float: left; overflow-y: scroll; font-size: 1.15rem;'></iframe>
+        
+        <script src="jslists-master/jsLists.js"></script>
+        <script>
+            JSLists.applyToList('simple_list', 'ALL');
+        </script>
+    </body>
+</html>

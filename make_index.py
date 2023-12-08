@@ -41,7 +41,7 @@ def title_case(x):
     return ' '.join(s)
 
 
-def get_html2(o, nested=False):
+def dict_to_html(o, nested=False):
     s = ""
     if isinstance(o, dict):
         s += f'<ul class="{"nested" if nested else "treeview-animated-list"}">\n'
@@ -49,7 +49,7 @@ def get_html2(o, nested=False):
             s += f'''<li class="treeview-animated-items">
                             <a class="closed"> <i class="fas fa-angle-right"></i>
                                 <span><i class="far fa-folder-open ic-w mx-1"></i>
-                                    {k}</span></a>''' + get_html2(v, True) + '''
+                                    {k}</span></a>''' + dict_to_html(v, True) + '''
                                 
                             </li>'''
         s += '</ul>'
@@ -80,7 +80,7 @@ def get_html2(o, nested=False):
     return re.sub('\s+', ' ', s)
 
 
-if __name__ == '__main__':
+def convert_toc_xml_to_menu():
     with open(BASE_PATH / 'toc.json', 'r') as f:
         toc = json.load(f)
 
@@ -100,8 +100,15 @@ if __name__ == '__main__':
 
     d = dict_to_nested_dict_with_links(new_toc)
 
-    html_string = get_html2(d)
+    html_string = dict_to_html(d)
     soup = BeautifulSoup(html_string, features='html.parser')
-    template = open('repair_manual/template.html', 'r').read().replace('% VAR %', soup.prettify())
-    with open('repair_manual/output.html', 'w') as f:
-        f.write(template)
+    return soup.prettify()
+
+
+if __name__ == '__main__':
+    html = convert_toc_xml_to_menu()
+    html = html.replace('t3Portal/', 'ToyotaTechInfoRipper/saved/t3Portal/')
+    with open('template/template.html', 'r') as template:
+        template = template.read().replace('% VAR %', html)
+    with open('saved/index.html', 'w') as index:
+        index.write(template)

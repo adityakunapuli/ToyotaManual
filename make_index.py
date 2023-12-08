@@ -89,7 +89,6 @@ if __name__ == '__main__':
         new_v = []
         for w in v:
             engine_code = [x for x in w.split(' ') if x in ENGINE_CODES]
-            # w = format_title(w)
             if engine_code:
                 engine_code = engine_code[0]
                 sub_dir = w.replace('(', '').replace(')', '').replace(engine_code, '').strip()
